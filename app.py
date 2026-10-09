@@ -14,7 +14,7 @@ import streamlit as st
 # Sayfa ayarları ve stil
 # ------------------------------------------------------------------
 st.set_page_config(
-    page_title="İnşaat süre TL/M2 Aracı",
+    page_title="İnşaat süre AY/M2 Aracı",
     page_icon="🏗️",
     layout="centered",
 )
@@ -181,7 +181,7 @@ if gelismis_mi:
 # ------------------------------------------------------------------
 # TL/M2
 # ------------------------------------------------------------------
-if st.button("💰 Sureyi TL/M2 Et", type="primary", use_container_width=True):
+if st.button("💰 Sureyi AY/M2 Et", type="primary", use_container_width=True):
     if gelismis_mi:
         row = {"alan_m2": alan_m2, "kat_sayisi": kat_sayisi, "insaat_yili": insaat_yili,
                "zemin_sinifi_B": 0, "zemin_sinifi_C": 0, "zemin_sinifi_D": 0}
@@ -196,14 +196,14 @@ if st.button("💰 Sureyi TL/M2 Et", type="primary", use_container_width=True):
     if uyarilar:
         st.markdown(f"""
         <div class="result-box" style="background-color:{RED};">
-            <div class="value">{TL/M2:,.1f} AY</div>
-            <div class="label">TL/M2i Toplam Sure — GÜVENİLİR DEĞİL</div>
+            <div class="value">{AY/M2:,.1f} AY</div>
+            <div class="label">AY/M2i Toplam Sure — GÜVENİLİR DEĞİL</div>
         </div>
         """, unsafe_allow_html=True)
         st.markdown(
             '<div class="warn-box"><b>⚠️ Ekstrapolasyon uyarısı:</b> ' +
             " ".join(uyarilar) +
-            " Model bu bölgede hiçbir şey öğrenmemiştir, TL/M2 güvenilir değildir.</div>",
+            " Model bu bölgede hiçbir şey öğrenmemiştir, AY/M2 güvenilir değildir.</div>",
             unsafe_allow_html=True,
         )
     else:
