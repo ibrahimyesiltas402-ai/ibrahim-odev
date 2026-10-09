@@ -14,7 +14,7 @@ import streamlit as st
 # Sayfa ayarları ve stil
 # ------------------------------------------------------------------
 st.set_page_config(
-    page_title="İnşaat Maliyet Tahmin Aracı",
+    page_title="İnşaat süre Tahmin Aracı",
     page_icon="🏗️",
     layout="centered",
 )
