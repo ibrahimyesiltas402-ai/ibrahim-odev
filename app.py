@@ -209,7 +209,7 @@ if st.button("💰 Sureyi TL/M2 Et", type="primary", use_container_width=True):
     else:
         st.markdown(f"""
         <div class="result-box">
-            <div class="value">{AY/M2:,.1f} AY</div>
+            <div class="value">{AY_M2:,.1f} AY</div>
             <div class="label">AY/M2i Toplam Sure</div>
         </div>
         """, unsafe_allow_html=True)
