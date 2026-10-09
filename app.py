@@ -191,7 +191,7 @@ if st.button("💰 Sureyi TL/M2 Et", type="primary", use_container_width=True):
         TL_M2 = model_gelismis.predict(X_yeni)[0]
     else:
         X_yeni = pd.DataFrame([{"alan_m2": alan_m2, "kat_sayisi": kat_sayisi}])
-        TL/M2 = model_basit.predict(X_yeni)[0]
+        TL_M2 = model_basit.predict(X_yeni)[0]
 
     if uyarilar:
         st.markdown(f"""
