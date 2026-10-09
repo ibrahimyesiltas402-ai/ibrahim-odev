@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-İnşaat Sure TL/M2 Aracı
+İnşaat Sure AY/M2 Aracı
 Hafta 2'de kurduğumuz lineer regresyon modellerinin "gerçek kullanım ortamı".
 Kod bilmeyen biri bile bu ekrandan AY/M2i sureyi öğrenebilir.
 """
