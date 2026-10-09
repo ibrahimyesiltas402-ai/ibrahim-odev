@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-İnşaat Proje Maliyeti Tahmin Aracı
+İnşaat Sure TL/M2 Aracı
 Hafta 2'de kurduğumuz lineer regresyon modellerinin "gerçek kullanım ortamı".
-Kod bilmeyen biri bile bu ekrandan tahmini maliyeti öğrenebilir.
+Kod bilmeyen biri bile bu ekrandan AY/M2i sureyi öğrenebilir.
 """
 import json
 import joblib
@@ -14,7 +14,7 @@ import streamlit as st
 # Sayfa ayarları ve stil
 # ------------------------------------------------------------------
 st.set_page_config(
-    page_title="İnşaat süre Tahmin Aracı",
+    page_title="İnşaat süre TL/M2 Aracı",
     page_icon="🏗️",
     layout="centered",
 )
@@ -72,7 +72,7 @@ st.markdown(f"""
 
 st.markdown("""
 <div class="app-header">
-    <h1>🏗️ İnşaat Proje Maliyeti Tahmin Aracı</h1>
+    <h1>🏗️ İnşaat Sure TL/M2 Aracı</h1>
     <p>İnşaat Mühendisliğinde Yapay Zekâ Uygulamaları — Hafta 2 Lab Projesi</p>
 </div>
 """, unsafe_allow_html=True)
@@ -82,8 +82,8 @@ st.markdown("""
 # ------------------------------------------------------------------
 @st.cache_resource
 def yukle():
-    basit = joblib.load("models/maliyet_modeli_basit.pkl")
-    gelismis = joblib.load("models/maliyet_modeli_gelismis.pkl")
+    basit = joblib.load("models/sure_modeli_basit.pkl")
+    gelismis = joblib.load("models/sure_modeli_gelismis.pkl")
     with open("models/meta.json", encoding="utf-8") as f:
         meta = json.load(f)
     return basit, gelismis, meta
@@ -115,7 +115,7 @@ if gelismis_mi:
     m = meta["gelismis_model"]
     st.sidebar.metric("Test R²", f"{m['r2']:.3f}")
     st.sidebar.metric("Train R²", f"{m['train_r2']:.3f}")
-    st.sidebar.metric("Test MAE", f"{m['mae']:,.0f} TL")
+    st.sidebar.metric("Test MAE", f"{m['mae']:,.0f} AY")
     st.sidebar.caption(
         "⚠️ Train R² ile Test R² arasındaki büyük fark, bu modelin "
         "**aşırı öğrenme (overfitting)** riski taşıdığını gösterir — "
@@ -124,7 +124,7 @@ if gelismis_mi:
 else:
     m = meta["basit_model"]
     st.sidebar.metric("Test R²", f"{m['r2']:.3f}")
-    st.sidebar.metric("Test MAE", f"{m['mae']:,.0f} TL")
+    st.sidebar.metric("Test MAE", f"{m['mae']:,.1f} AY")
     st.sidebar.caption(
         "⚠️ R² negatif — bu, modelin sadece 2 değişkenle (alan, kat) "
         "yeterince açıklayıcı olmadığının işaretidir."
@@ -179,62 +179,62 @@ if gelismis_mi:
         uyarilar.append(f"**İnşaat yılı** ({insaat_yili}) eğitim verisinin aralığının ({lo}-{hi}) dışında.")
 
 # ------------------------------------------------------------------
-# Tahmin
+# TL/M2
 # ------------------------------------------------------------------
-if st.button("💰 Maliyeti Tahmin Et", type="primary", use_container_width=True):
+if st.button("💰 Sureyi TL/M2 Et", type="primary", use_container_width=True):
     if gelismis_mi:
         row = {"alan_m2": alan_m2, "kat_sayisi": kat_sayisi, "insaat_yili": insaat_yili,
                "zemin_sinifi_B": 0, "zemin_sinifi_C": 0, "zemin_sinifi_D": 0}
         if zemin_sinifi != "A":
             row[f"zemin_sinifi_{zemin_sinifi}"] = 1
         X_yeni = pd.DataFrame([row])[meta["gelismis_model"]["features"]]
-        tahmin = model_gelismis.predict(X_yeni)[0]
+        TL/M2 = model_gelismis.predict(X_yeni)[0]
     else:
         X_yeni = pd.DataFrame([{"alan_m2": alan_m2, "kat_sayisi": kat_sayisi}])
-        tahmin = model_basit.predict(X_yeni)[0]
+        TL/M2 = model_basit.predict(X_yeni)[0]
 
     if uyarilar:
         st.markdown(f"""
         <div class="result-box" style="background-color:{RED};">
-            <div class="value">{tahmin:,.0f} TL</div>
-            <div class="label">Tahmini Toplam Maliyet — GÜVENİLİR DEĞİL</div>
+            <div class="value">{TL/M2:,.1f} AY</div>
+            <div class="label">TL/M2i Toplam Sure — GÜVENİLİR DEĞİL</div>
         </div>
         """, unsafe_allow_html=True)
         st.markdown(
             '<div class="warn-box"><b>⚠️ Ekstrapolasyon uyarısı:</b> ' +
             " ".join(uyarilar) +
-            " Model bu bölgede hiçbir şey öğrenmemiştir, tahmin güvenilir değildir.</div>",
+            " Model bu bölgede hiçbir şey öğrenmemiştir, TL/M2 güvenilir değildir.</div>",
             unsafe_allow_html=True,
         )
     else:
         st.markdown(f"""
         <div class="result-box">
-            <div class="value">{tahmin:,.0f} TL</div>
-            <div class="label">Tahmini Toplam Maliyet</div>
+            <div class="value">{TL/M2:,.1f} AY</div>
+            <div class="label">TL/M2i Toplam Sure</div>
         </div>
         """, unsafe_allow_html=True)
         st.markdown(
-            '<div class="ok-box">✅ Girdi değerleri eğitim verisinin aralığı içinde — tahmin makul bir güvenilirlik taşıyor.</div>',
+            '<div class="ok-box">✅ Girdi değerleri eğitim verisinin aralığı içinde — AY/M2 makul bir güvenilirlik taşıyor.</div>',
             unsafe_allow_html=True,
         )
 
-    with st.expander("📐 Model bu tahmini nasıl hesapladı?"):
+    with st.expander("📐 Model bu AY/M2i nasıl hesapladı?"):
         if gelismis_mi:
             c = meta["gelismis_model"]["coefs"]
             st.markdown(f"""
 Gelişmiş model, her özelliğin katsayısını (diğerleri sabitken) şu şekilde kullanır:
 
-- Alan katsayısı: **{c['alan_m2']:,.0f} TL/m²**
-- Kat katsayısı: **{c['kat_sayisi']:,.0f} TL/kat**
-- Yıl katsayısı: **{c['insaat_yili']:,.0f} TL/yıl**
-- Zemin B/C/D etkisi: **{c['zemin_sinifi_B']:,.0f}** / **{c['zemin_sinifi_C']:,.0f}** / **{c['zemin_sinifi_D']:,.0f}** TL (A zeminine göre farkı)
+- Alan katsayısı: **{c['alan_m2']:,.0f} AY/m²**
+- Kat katsayısı: **{c['kat_sayisi']:,.0f} AY/kat**
+- Yıl katsayısı: **{c['insaat_yili']:,.0f} AY/yıl**
+- Zemin B/C/D etkisi: **{c['zemin_sinifi_B']:,.0f}** / **{c['zemin_sinifi_C']:,.0f}** / **{c['zemin_sinifi_D']:,.0f}** AY (A zeminine göre farkı)
             """)
         else:
             b = meta["basit_model"]
             st.markdown(f"""
 Basit model şu formülü kullanır:
 
-**Maliyet = {b['alan_katsayisi']:,.0f} × Alan + {b['kat_katsayisi']:,.0f} × Kat + sabit**
+**Sure = {b['alan_katsayisi']:,.0f} × Alan + {b['kat_katsayisi']:,.0f} × Kat + sabit**
             """)
         st.caption(
             "Not: Bu bir karar destek aracıdır, karar verici değil. Nihai kararı her zaman mühendis verir "
